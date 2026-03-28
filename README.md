@@ -1,6 +1,9 @@
 # book-tracker
 
 Team members:
+- Tursynbek Dias
+- Kamashev Syrym
+- 
 
 
 A web application for tracking books read.
