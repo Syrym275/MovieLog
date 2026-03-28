@@ -3,7 +3,7 @@
 Team members:
 - Tursynbek Dias
 - Kamashev Syrym
-- 
+- Abdissamet Yernur
 
 
 A web application for tracking books read.
