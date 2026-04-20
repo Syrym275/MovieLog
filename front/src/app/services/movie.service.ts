@@ -40,4 +40,12 @@ export class MovieService {
   trackMovie(movieId: number, status: string): Observable<UserMovie> {
     return this.http.post<UserMovie>(`${this.apiUrl}/user-movies/`, { movie: movieId, status });
   }
+
+  updateUserMovieStatus(userMovieId: number, status: string): Observable<UserMovie> {
+    return this.http.put<UserMovie>(`${this.apiUrl}/user-movies/${userMovieId}/`, { status });
+  }
+
+  deleteUserMovie(userMovieId: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}/user-movies/${userMovieId}/`);
+  }
 }

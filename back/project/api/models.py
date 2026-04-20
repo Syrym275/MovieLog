@@ -25,8 +25,15 @@ class MovieManager(models.Manager):
     def search(self, query):
         return self.filter(
             models.Q(title__icontains=query) |
-            models.Q(description__icontains=query) # the only reason Q objects exists is to make the OR operator possible in the django filters
+            models.Q(description__icontains=query)
         )
+
+    def top_rated(self):
+        return self.annotate(
+            avg_score=models.Avg('reviews__rating')
+        ).filter(
+            avg_score__gte=8.0
+        ).order_by('-avg_score', '-imdb_rating')
 
 class Movie(models.Model):
     title = models.CharField(max_length=255)
@@ -43,6 +50,8 @@ class Movie(models.Model):
     country = models.CharField(max_length=100, blank=True)
     genres = models.ManyToManyField(Genre, related_name='movies', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    objects = MovieManager()
 
     def __str__(self):
         return f"{self.title} ({self.release_year})"
@@ -81,6 +90,8 @@ class UserMovie(models.Model):
     watched_at = models.DateField(null=True, blank=True)
     times_watched = models.PositiveIntegerField(default=0)
 
+    objects = UserMovieManager()
+
     def __str__(self):
         return f"{self.user.username} - {self.movie.title} ({self.status})"
 
@@ -113,6 +124,8 @@ class Review(models.Model):
     is_edited = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    objects = ReviewManager()
 
     def __str__(self):
         return f"{self.user.username} reviewed {self.movie.title} — {self.rating}/10"
